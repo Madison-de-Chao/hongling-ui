@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>八字報告 · 虹靈御所</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/report.css" />
+</head>
+<body>
+  <div class="report-wrapper">
+    <header class="report-header">
+      <h1 class="report-title">你的八字人生兵法報告</h1>
+      <p class="report-tone">語氣風格：<span id="tone-display"></span></p>
+    </header>
+
+    <section id="report-body" class="report-body">
+      <!-- API 回傳的 HTML 報告內容將插入此處 -->
+    </section>
+
+    <footer class="report-buttons">
+      <button onclick="window.print()">🖨️ 列印報告</button>
+      <button onclick="downloadReport()">💾 儲存報告</button>
+      <button onclick="shareReport()">📤 分享報告</button>
+    </footer>
+  </div>
+
+  <script src="js/report.js"></script>
+</body>
+</html>
