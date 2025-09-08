@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>虹靈御所 · Rainbow Sanctuary</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+</head>
+<body>
+  <canvas id="particles-bg"></canvas>
+
+  <div class="intro-content">
+    <section class="logo-section">
+      <img src="assets/logo/maison.png" class="logo maison" alt="Maison de Chao" />
+      <span class="x-symbol">×</span>
+      <img src="assets/logo/rainbow.png" class="logo rainbow" alt="Rainbow Sanctuary" />
+    </section>
+
+    <section class="text-section">
+      <h1 class="brand-title">Maison de Chao × Rainbow Sanctuary</h1>
+      <p id="typed-slogan" class="brand-slogan"></p>
+      <p class="brand-sub">靈魂的骨架 × 情感的光譜</p>
+    </section>
+
+    <section class="tone-selector">
+      <label>選擇你的敘事語氣：</label>
+      <select id="tone">
+        <option value="default">預設</option>
+        <option value="military">軍事</option>
+        <option value="healing">療癒</option>
+        <option value="poetic">詩意</option>
+        <option value="mythic">神話</option>
+      </select>
+    </section>
+
+    <button class="enter-btn" onclick="enterSite()">開始召喚你的軍團</button>
+  </div>
+
+  <audio id="welcome-audio" src="assets/audio/welcome.mp3" autoplay></audio>
+  <script src="js/animation.js"></script>
+</body>
+</html>
