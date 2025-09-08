@@ -1,0 +1,40 @@
+.bazi-container {
+  padding: 2rem;
+  background: linear-gradient(to bottom, #0f0f1a, #1a1a2e);
+  color: white;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+input, select, button {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  width: 100%;
+  max-width: 300px;
+}
+
+button {
+  background: linear-gradient(to right, #ff6ec4, #7873f5);
+  color: white;
+  cursor: pointer;
+}
+
+.result-section {
+  margin-top: 2rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+#pillars, #narrative {
+  margin-bottom: 1.5rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
