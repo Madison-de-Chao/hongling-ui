@@ -17,6 +17,10 @@ document.getElementById("bazi-form").addEventListener("submit", async (e) => {
     body: JSON.stringify({ input, tone })
   })
   const { chart, narrative } = await res.json()
+
+  localStorage.setItem("chart", JSON.stringify(chart))
+  localStorage.setItem("narrative", JSON.stringify(narrative))
+
   renderChart(chart)
   renderNarrative(narrative)
 })
