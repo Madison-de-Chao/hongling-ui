@@ -184,3 +184,80 @@ function generateSavageReport(chart, narrative) {
       <h2>🧨 結語</h2>
       <p>你的命盤不是問題，是一場災難的藝術。但放心，災難也能成為傳奇——只要你夠狂。</p>
     </div>
+
+function generateSavageReport(chart, narrative) {
+  return `
+    <div class="report-section">
+      <h2>😈 靈魂毒舌報告</h2>
+      <p>你出生的那一刻，宇宙大概在偷懶。命盤一打開，我就知道你是個麻煩精。</p>
+    </div>
+
+    <div class="report-section">
+      <h2>🧭 四柱吐槽</h2>
+      ${Object.entries(chart.pillars).map(([key, val]) => {
+        const god = chart.tenGods.find(g => g.includes(val.gan)) || "無十神"
+        return `<p>${key}柱：${val.pillar} → ${god} → ${getSavageComment(god)}</p>`
+      }).join("")}
+    </div>
+
+    <div class="report-section">
+      <h2>📊 五行亂象</h2>
+      <p>${Object.entries(chart.fiveElements).map(([el, val]) => `${el}：${val}`).join("　")}</p>
+      <p>陰陽比例：陰 ${chart.yinYang.陰} / 陽 ${chart.yinYang.陽}</p>
+      <p>偏陰？難怪你這麼會內耗。</p>
+    </div>
+
+    <div class="report-section">
+      <h2>💀 軍團亂入</h2>
+      ${Object.entries(narrative).map(([pillar, data]) => `
+        <div class="report-card">
+          <h3>${pillar}柱 · ${data.commander}</h3>
+          <p>${data.story.replace(/你/g, "你這傢伙")}</p>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="report-section">
+      <h2>🧨 結語</h2>
+      <p>你的命盤不是問題，是一場災難的藝術。但放心，災難也能成為傳奇——只要你夠狂。</p>
+    </div>
+  `
+}function getSavageComment(tenGod) {
+  if (!tenGod || tenGod === "無十神") return "你這柱沒個性，像背景牆。"
+
+  const map = {
+    "比肩": "你超愛自己，別人都只是背景板。",
+    "劫財": "你搶資源搶得理直氣壯，連朋友都怕你。",
+    "食神": "嘴巴很會講，但做事呢？嗯。",
+    "傷官": "你是創意爆棚，但情緒也爆炸。",
+    "偏財": "你錢來得快，花得更快，存款是傳說。",
+    "正財": "你很穩，但穩到讓人想睡。",
+    "偏官": "你超會控制人，但不一定控制得住自己。",
+    "正官": "你表面服從，內心叛逆，雙面人代表。",
+    "偏印": "你活在自己的世界，別人進不來。",
+    "正印": "你很照顧人，但有時太黏太煩。"
+  }
+
+  const key = Object.keys(map).find(k => tenGod.includes(k))
+  return key ? map[key] : "你這柱的個性我都懶得吐槽了。"
+}const tone = localStorage.getItem("tone") || "default"
+document.getElementById("tone-display").textContent = tone
+
+const chart = JSON.parse(localStorage.getItem("chart"))
+const narrative = JSON.parse(localStorage.getItem("narrative"))
+
+renderReport(tone, chart, narrative)function renderReport(tone, chart, narrative) {
+  let html = ""
+  if (tone === "healing") {
+    html = generateHealingReport(chart, narrative)
+  } else if (tone === "military") {
+    html = generateMilitaryReport(chart, narrative)
+  } else if (tone === "mythic") {
+    html = generateMythicReport(chart, narrative)
+  } else if (tone === "savage") {
+    html = generateSavageReport(chart, narrative)
+  } else {
+    html = "<p>⚠️ 無法辨識語氣，請重新選擇。</p>"
+  }
+  document.getElementById("report-body").innerHTML = html
+}
