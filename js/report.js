@@ -260,4 +260,49 @@ renderReport(tone, chart, narrative)function renderReport(tone, chart, narrative
     html = "<p>⚠️ 無法辨識語氣，請重新選擇。</p>"
   }
   document.getElementById("report-body").innerHTML = html
+}function renderReport(data, tone, pillarsText) {
+  document.getElementById("pillars-text").textContent = pillarsText;
+  document.getElementById("tone-text").textContent = tone;
+
+  // 神煞
+  const shenshaList = document.getElementById("shensha-list");
+  shenshaList.innerHTML = "";
+  data.shensha.forEach(s => {
+    const li = document.createElement("li");
+    li.textContent = s;
+    li.className = "tag";
+    shenshaList.appendChild(li);
+  });
+
+  // 十神
+  const tenGodList = document.getElementById("ten-god-list");
+  tenGodList.innerHTML = "";
+  data.tenGods.forEach(g => {
+    const li = document.createElement("li");
+    li.textContent = g;
+    li.className = "tag";
+    tenGodList.appendChild(li);
+  });
+
+  // 五行
+  const elementList = document.getElementById("element-list");
+  elementList.innerHTML = "";
+  Object.entries(data.fiveElements).forEach(([k, v]) => {
+    const li = document.createElement("li");
+    li.textContent = `${k}：${v.toFixed(1)}`;
+    li.className = "tag";
+    elementList.appendChild(li);
+  });
+
+  // 陰陽
+  document.getElementById("yin-yang-text").textContent = `陽：${data.yinYang.陽}，陰：${data.yinYang.陰}`;
+
+  // 建議語句
+  const adviceList = document.getElementById("advice-list");
+  adviceList.innerHTML = "";
+  Object.entries(data.advice).forEach(([pillar, text]) => {
+    const li = document.createElement("li");
+    li.textContent = `【${pillar}柱】${text}`;
+    adviceList.appendChild(li);
+  });
 }
