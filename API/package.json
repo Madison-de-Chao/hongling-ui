@@ -1,0 +1,35 @@
+{
+  "name": "hongling-ui-api",
+  "version": "1.0.0",
+  "description": "PostgreSQL Repository Layer for Hongling UI - 虹靈御所資料存取層",
+  "main": "repository/PostgresRepo.js",
+  "scripts": {
+    "test": "node example.js",
+    "example": "node example.js",
+    "init-db": "node -e \"const repo = require('./repository/PostgresRepo'); const config = require('./config'); (async () => { const r = new repo(config); await r.connect(); console.log('Database initialized'); await r.disconnect(); })();\""
+  },
+  "keywords": [
+    "postgresql",
+    "repository",
+    "bazi",
+    "eight-characters",
+    "chinese-astrology",
+    "database",
+    "hongling-ui"
+  ],
+  "author": "Madison de Chao",
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Madison-de-Chao/hongling-ui.git"
+  }
+}
