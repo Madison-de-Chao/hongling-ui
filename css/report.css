@@ -4,6 +4,29 @@
   color: white;
   font-family: 'Noto Serif TC', serif;
   min-height: 100vh;
+}.report-body.healing-style {
+  background: #f0fdf4;
+  color: #2c3e50;
+  font-family: "Noto Serif TC", serif;
+}
+
+.report-body.military-style {
+  background: #f9f9f9;
+  border-left: 4px solid #2c3e50;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.report-body.mythic-style {
+  background: #f5f0ff;
+  font-family: "Cinzel", serif;
+  color: #4b0082;
+}
+
+.report-body.savage-style {
+  background: #fff0f0;
+  color: #8b0000;
+  font-weight: bold;
+  font-family: "Impact", sans-serif;
 }
 
 .report-header {
