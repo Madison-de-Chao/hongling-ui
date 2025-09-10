@@ -41,3 +41,70 @@ function enterSite() {
       document.querySelector(".enter-btn").innerText = "開始召喚你的軍團";
     });
 }
+// 動態生成年份選單
+window.addEventListener("DOMContentLoaded", () => {
+  const yearSelect = document.getElementById("birth-year");
+  for (let y = 1900; y <= new Date().getFullYear(); y++) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y + "年";
+    yearSelect.appendChild(opt);
+  }
+
+  const monthSelect = document.getElementById("birth-month");
+  for (let m = 1; m <= 12; m++) {
+    const opt = document.createElement("option");
+    opt.value = m;
+    opt.textContent = m + "月";
+    monthSelect.appendChild(opt);
+  }
+
+  const daySelect = document.getElementById("birth-day");
+  for (let d = 1; d <= 31; d++) {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = d + "日";
+    daySelect.appendChild(opt);
+  }
+});
+
+// 主召喚函式
+function enterSite() {
+  const tone = document.getElementById("tone").value;
+  const y = parseInt(document.getElementById("birth-year").value);
+  const m = parseInt(document.getElementById("birth-month").value);
+  const d = parseInt(document.getElementById("birth-day").value);
+  const h = parseInt(document.getElementById("birth-hour").value);
+
+  if (!y || !m || !d || isNaN(h)) {
+    alert("請完整輸入出生年月日時");
+    return;
+  }
+
+  // 使用 utils.ts 的四柱推演邏輯（你已經有）
+  const yearPillar = calculateYearPillar(y, m, d);
+  const monthPillar = calculateMonthPillar(yearPillar.gan, y, m, d);
+  const dayPillar = calculateDayPillar(y, m, d);
+  const hourPillar = calculateHourPillar(h, dayPillar.gan);
+
+  const pillars = {
+    year: yearPillar,
+    month: monthPillar,
+    day: dayPillar,
+    hour: hourPillar
+  };
+
+  document.querySelector(".enter-btn").innerText = "召喚中...";
+
+  fetchReport(pillars, tone)
+    .then(data => {
+      console.log("敘事結果：", data);
+      alert("召喚成功！請查看控制台結果");
+      document.querySelector(".enter-btn").innerText = "開始召喚你的軍團";
+    })
+    .catch(err => {
+      console.error("API 錯誤", err);
+      alert("召喚失敗，請稍後再試");
+      document.querySelector(".enter-btn").innerText = "開始召喚你的軍團";
+    });
+}
