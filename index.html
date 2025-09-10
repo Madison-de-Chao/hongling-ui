@@ -25,6 +25,38 @@
     </section>
 
     <section class="tone-selector">
+      <section class="birth-form">
+  <label>請輸入你的出生資料：</label>
+  <div class="birth-fields">
+    <select id="birth-year">
+      <option value="">年</option>
+      <!-- 可用 JS 動態生成 1900～2025 -->
+    </select>
+    <select id="birth-month">
+      <option value="">月</option>
+      <!-- 1～12 -->
+    </select>
+    <select id="birth-day">
+      <option value="">日</option>
+      <!-- 1～31 -->
+    </select>
+    <select id="birth-hour">
+      <option value="">時辰</option>
+      <option value="0">子時（23:00-01:00）</option>
+      <option value="2">丑時（01:00-03:00）</option>
+      <option value="4">寅時（03:00-05:00）</option>
+      <option value="6">卯時（05:00-07:00）</option>
+      <option value="8">辰時（07:00-09:00）</option>
+      <option value="10">巳時（09:00-11:00）</option>
+      <option value="12">午時（11:00-13:00）</option>
+      <option value="14">未時（13:00-15:00）</option>
+      <option value="16">申時（15:00-17:00）</option>
+      <option value="18">酉時（17:00-19:00）</option>
+      <option value="20">戌時（19:00-21:00）</option>
+      <option value="22">亥時（21:00-23:00）</option>
+    </select>
+  </div>
+</section>
       <label>選擇你的敘事語氣：</label>
       <select id="tone">
         <option value="default">預設</option>
