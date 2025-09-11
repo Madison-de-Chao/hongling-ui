@@ -2,11 +2,28 @@
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("Enhanced app loaded, checking localStorage...");
   
-  // 添加載入動畫
-  showLoadingAnimation();
-  
   const baziAnalysis = localStorage.getItem("baziAnalysis");
   const tone = localStorage.getItem("tone") || "default";
+  
+  // 檢查是否有保存的表單數據
+  const savedFormData = localStorage.getItem("birthData");
+  if (savedFormData) {
+    try {
+      const formData = JSON.parse(savedFormData);
+      // 填入保存的表單數據
+      const yearInput = document.querySelector('input[name="yyyy"]');
+      const monthInput = document.querySelector('input[name="mm"]');
+      const dayInput = document.querySelector('input[name="dd"]');
+      const hourInput = document.querySelector('input[name="hh"]');
+      
+      if (yearInput) yearInput.value = formData.year;
+      if (monthInput) monthInput.value = formData.month;
+      if (dayInput) dayInput.value = formData.day;
+      if (hourInput) hourInput.value = formData.hour;
+    } catch (error) {
+      console.error("Error loading saved form data:", error);
+    }
+  }
   
   if (baziAnalysis) {
     try {
@@ -16,19 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (data.chart && data.narrative) {
         await renderEnhancedResults(data);
       } else {
-        console.log("Incomplete data, trying to regenerate...");
-        await generateFreshData();
+        console.log("Incomplete data, will generate when user submits");
       }
     } catch (error) {
       console.error("Error parsing cached data:", error);
-      await generateFreshData();
     }
   } else {
-    console.log("No cached data, generating fresh data...");
-    await generateFreshData();
+    console.log("No cached data, waiting for user input...");
   }
-  
-  hideLoadingAnimation();
 });
 
 // 生成新的八字數據
@@ -407,6 +419,9 @@ document.getElementById("bazi-form")?.addEventListener("submit", async (e) => {
     day: parseInt(form.get("dd")),
     hour: parseInt(form.get("hh"))
   };
+  
+  // 保存表單數據到localStorage
+  localStorage.setItem("birthData", JSON.stringify(input));
   
   const tone = localStorage.getItem("tone") || "default";
   

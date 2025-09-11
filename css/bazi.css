@@ -42,6 +42,22 @@
   transition: all 0.3s ease;
 }
 
+/* 修正placeholder顏色 */
+.form-section input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 1;
+}
+
+/* 修正select選項顏色 */
+.form-section select option {
+  background: #1a1a2e;
+  color: white;
+}
+
+.form-section select {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .form-section input:focus,
 .form-section select:focus {
   outline: none;
