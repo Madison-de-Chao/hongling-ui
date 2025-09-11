@@ -110,6 +110,38 @@ canvas#particles-bg {
   color: #ddd;
 }
 
+.name-field {
+  margin-bottom: 1rem;
+}
+
+.name-field input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.name-field input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.name-field input:hover {
+  border-color: #ff6ec4;
+  box-shadow: 0 0 10px rgba(255, 110, 196, 0.3);
+}
+
+.name-field input:focus {
+  outline: none;
+  border-color: #ff6ec4;
+  box-shadow: 0 0 15px rgba(255, 110, 196, 0.4);
+}
+
 .birth-fields {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));

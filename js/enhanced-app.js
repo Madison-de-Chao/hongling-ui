@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   const baziAnalysis = storage.getItem("baziAnalysis");
   const tone = storage.getItem("tone") || "default";
+  const userName = storage.getItem("userName") || "";
   
   // 檢查是否有從首頁傳來的出生資料
   const savedBirthData = storage.getItem("birthData");
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const birthData = JSON.parse(savedBirthData);
       console.log("從首頁載入出生資料:", birthData);
+      console.log("用戶姓名:", userName);
       
       // 自動填入表單
       const yearInput = document.querySelector('input[name="yyyy"]') || document.querySelector('input[placeholder="西元年"]');
