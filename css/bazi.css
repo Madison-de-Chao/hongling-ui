@@ -208,3 +208,220 @@ button[onclick="exportReport()"]:hover {
     max-width: 100%;
   }
 }
+
+
+/* 增強版美化效果 */
+.pillar-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.pillar-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s;
+  opacity: 0;
+}
+
+.pillar-card:hover::before {
+  animation: shimmer 1.5s ease-in-out;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+.narrative-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.narrative-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 110, 196, 0.1), transparent);
+  transition: left 0.8s;
+}
+
+.narrative-card:hover::after {
+  left: 100%;
+}
+
+/* 脈動效果 */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 110, 196, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 10px rgba(255, 110, 196, 0);
+  }
+}
+
+.pillar-card:hover {
+  animation: pulse 2s infinite;
+}
+
+/* 發光效果 */
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(255, 110, 196, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 110, 196, 0.8), 0 0 30px rgba(255, 110, 196, 0.6);
+  }
+}
+
+/* 浮動動畫 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+canvas#fiveChart {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* 漸變邊框動畫 */
+@keyframes borderGradient {
+  0%, 100% {
+    border-image: linear-gradient(45deg, #ff6ec4, #7873f5, #00d4ff, #ff9500) 1;
+  }
+  25% {
+    border-image: linear-gradient(45deg, #7873f5, #00d4ff, #ff9500, #ff6ec4) 1;
+  }
+  50% {
+    border-image: linear-gradient(45deg, #00d4ff, #ff9500, #ff6ec4, #7873f5) 1;
+  }
+  75% {
+    border-image: linear-gradient(45deg, #ff9500, #ff6ec4, #7873f5, #00d4ff) 1;
+  }
+}
+
+.result-section h2 {
+  background: linear-gradient(45deg, #ff6ec4, #7873f5, #00d4ff, #ff9500);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* 粒子背景效果 */
+.bazi-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 110, 196, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(120, 115, 245, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: particleMove 20s ease-in-out infinite;
+}
+
+@keyframes particleMove {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  33% {
+    transform: translateX(30px) translateY(-30px);
+  }
+  66% {
+    transform: translateX(-20px) translateY(20px);
+  }
+}
+
+/* 滾動條美化 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #ff6ec4, #7873f5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #ff6ec4, #7873f5, #00d4ff);
+}
+
+/* 響應式增強 */
+@media (max-width: 768px) {
+  .pillar-card {
+    margin-bottom: 1rem;
+  }
+  
+  .narrative-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .result-section h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* 載入動畫增強 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+

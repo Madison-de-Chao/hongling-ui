@@ -12,12 +12,20 @@ async function fetchReport(pillars, tone = "default") {
   return await res.json();
 }
 
-// 新增：從資料庫計算八字
+// 新增：從資料庫計算八字 - 使用正確的API端點
 async function calculateBaziFromDatabase(birthData) {
-  const res = await fetch(`${API_BASE}/bazi/calculate`, {
+  // 轉換為後端API期望的格式
+  const apiData = {
+    datetime_local: `${birthData.year}-${String(birthData.month).padStart(2, '0')}-${String(birthData.day).padStart(2, '0')}T${String(birthData.hour).padStart(2, '0')}:00:00`,
+    timezone: "Asia/Taipei",
+    longitude: 120.0,
+    use_true_solar_time: false
+  };
+
+  const res = await fetch(`${API_BASE}/api/bazi/compute`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(birthData)
+    body: JSON.stringify(apiData)
   });
 
   if (!res.ok) throw new Error("八字計算失敗");
@@ -27,18 +35,95 @@ async function calculateBaziFromDatabase(birthData) {
 // 新增：從資料庫獲取完整八字分析
 async function getFullBaziAnalysis(birthData, tone = "default") {
   try {
-    const res = await fetch(`${API_BASE}/bazi/analysis`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...birthData, tone })
-    });
-
-    if (!res.ok) throw new Error("八字分析失敗");
-    return await res.json();
+    const baziResult = await calculateBaziFromDatabase(birthData);
+    
+    // 轉換後端數據格式為前端期望的格式
+    const analysisData = convertBackendToFrontend(baziResult.data, tone);
+    return analysisData;
   } catch (error) {
     console.warn("資料庫API暫時無法使用，使用演示數據：", error);
     return getDemoAnalysis(birthData, tone);
   }
+}
+
+// 轉換後端API數據格式為前端期望的格式
+function convertBackendToFrontend(backendData, tone = "default") {
+  const toneStyles = {
+    "military": { prefix: "將軍", suffix: "，準備迎接人生戰場的挑戰！", style: "軍事化" },
+    "healing": { prefix: "療癒師", suffix: "，用溫柔的力量撫慰世界。", style: "溫柔療癒" },
+    "poetic": { prefix: "詩人", suffix: "，如詩如畫般綻放生命之美。", style: "詩意美學" },
+    "mythic": { prefix: "神話使者", suffix: "，承載著古老的神秘力量。", style: "神話傳說" },
+    "default": { prefix: "守護者", suffix: "，在人生道路上勇敢前行。", style: "平衡" }
+  };
+
+  const currentTone = toneStyles[tone] || toneStyles.default;
+  
+  // 轉換四柱數據
+  const pillars = {
+    年: {
+      pillar: backendData.four_pillars.year.stem + backendData.four_pillars.year.branch,
+      gan: backendData.four_pillars.year.stem,
+      zhi: backendData.four_pillars.year.branch
+    },
+    月: {
+      pillar: backendData.four_pillars.month.stem + backendData.four_pillars.month.branch,
+      gan: backendData.four_pillars.month.stem,
+      zhi: backendData.four_pillars.month.branch
+    },
+    日: {
+      pillar: backendData.four_pillars.day.stem + backendData.four_pillars.day.branch,
+      gan: backendData.four_pillars.day.stem,
+      zhi: backendData.four_pillars.day.branch
+    },
+    時: {
+      pillar: backendData.four_pillars.hour.stem + backendData.four_pillars.hour.branch,
+      gan: backendData.four_pillars.hour.stem,
+      zhi: backendData.four_pillars.hour.branch
+    }
+  };
+
+  // 轉換五行統計
+  const fiveElements = backendData.five_elements_stats.elements_count;
+
+  return {
+    chart: {
+      pillars: pillars,
+      fiveElements: fiveElements,
+      yinYang: {
+        陰: Math.round(Object.values(fiveElements).reduce((a, b) => a + b, 0) * 0.4),
+        陽: Math.round(Object.values(fiveElements).reduce((a, b) => a + b, 0) * 0.6)
+      }
+    },
+    narrative: {
+      年: {
+        commander: `${pillars.年.gan}${pillars.年.zhi}${currentTone.prefix}`,
+        strategist: backendData.ten_gods.year_stem || "智慧軍師",
+        naYin: "路旁土", // 可以後續從後端獲取
+        story: `年柱${pillars.年.pillar}代表你的根基與出身，${currentTone.prefix}的特質在你身上展現${currentTone.suffix}`
+      },
+      月: {
+        commander: `${pillars.月.gan}${pillars.月.zhi}${currentTone.prefix}`,
+        strategist: backendData.ten_gods.month_stem || "青春導師",
+        naYin: "白鑞金",
+        story: `月柱${pillars.月.pillar}展現你青年時期的特質，${currentTone.prefix}的智慧指引你前行${currentTone.suffix}`
+      },
+      日: {
+        commander: `${pillars.日.gan}${pillars.日.zhi}${currentTone.prefix}`,
+        strategist: backendData.ten_gods.day_stem || "核心本質",
+        naYin: "海中金",
+        story: `日柱${pillars.日.pillar}是你的核心本質，${currentTone.prefix}的力量從內心散發${currentTone.suffix}`
+      },
+      時: {
+        commander: `${pillars.時.gan}${pillars.時.zhi}${currentTone.prefix}`,
+        strategist: backendData.ten_gods.hour_stem || "未來戰士",
+        naYin: "天河水",
+        story: `時柱${pillars.時.pillar}預示你的未來發展，${currentTone.prefix}的潛能將在晚年綻放${currentTone.suffix}`
+      }
+    },
+    spirits: backendData.spirits || [],
+    calculation_log: backendData.calculation_log,
+    data_provenance: backendData.data_provenance
+  };
 }
 
 // 演示數據生成器
