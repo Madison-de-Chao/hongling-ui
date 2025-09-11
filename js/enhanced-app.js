@@ -55,23 +55,44 @@ document.addEventListener("DOMContentLoaded", async () => {
   const baziAnalysis = storage.getItem("baziAnalysis");
   const tone = storage.getItem("tone") || "default";
   
-  // 檢查是否有保存的表單數據
-  const savedFormData = storage.getItem("birthData");
-  if (savedFormData) {
+  // 檢查是否有從首頁傳來的出生資料
+  const savedBirthData = storage.getItem("birthData");
+  if (savedBirthData) {
     try {
-      const formData = JSON.parse(savedFormData);
-      // 安全填入保存的表單數據
-      const yearInput = document.querySelector('input[name="yyyy"]');
-      const monthInput = document.querySelector('input[name="mm"]');
-      const dayInput = document.querySelector('input[name="dd"]');
-      const hourInput = document.querySelector('input[name="hh"]');
+      const birthData = JSON.parse(savedBirthData);
+      console.log("從首頁載入出生資料:", birthData);
       
-      if (yearInput) yearInput.value = formData.year;
-      if (monthInput) monthInput.value = formData.month;
-      if (dayInput) dayInput.value = formData.day;
-      if (hourInput) hourInput.value = formData.hour;
+      // 自動填入表單
+      const yearInput = document.querySelector('input[name="yyyy"]') || document.querySelector('input[placeholder="西元年"]');
+      const monthInput = document.querySelector('input[name="mm"]') || document.querySelector('input[placeholder="月"]');
+      const dayInput = document.querySelector('input[name="dd"]') || document.querySelector('input[placeholder="日"]');
+      const hourInput = document.querySelector('input[name="hh"]') || document.querySelector('input[placeholder="時（0–23）"]');
+      
+      if (yearInput) yearInput.value = birthData.year;
+      if (monthInput) monthInput.value = birthData.month;
+      if (dayInput) dayInput.value = birthData.day;
+      if (hourInput) hourInput.value = birthData.hour;
+      
+      // 如果沒有保存的分析結果，自動計算
+      if (!baziAnalysis) {
+        console.log("自動計算八字...");
+        showLoadingAnimation();
+        
+        try {
+          const analysisData = await getFullBaziAnalysis(birthData, tone);
+          storage.setItem("baziAnalysis", JSON.stringify(analysisData));
+          await renderEnhancedResultsOnce(analysisData);
+        } catch (error) {
+          console.error("自動計算失敗，使用演示數據:", error);
+          const demoData = getRichDemoAnalysis(birthData, tone);
+          await renderEnhancedResultsOnce(demoData);
+        }
+        
+        hideLoadingAnimation();
+        return;
+      }
     } catch (error) {
-      console.error("Error loading saved form data:", error);
+      console.error("解析出生資料失敗:", error);
     }
   }
   
@@ -92,6 +113,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("No cached data, waiting for user input...");
   }
 });
+
+// 生成豐富故事內容的演示數據
+function getRichDemoAnalysis(birthData, tone = "default") {
+  const toneStyles = {
+    "military": {
+      prefix: "將軍",
+      suffix: "，準備迎接人生戰場的挑戰！",
+      style: "軍事化"
+    },
+    "healing": {
+      prefix: "療癒師",
+      suffix: "，用溫柔的力量撫慰世界。",
+      style: "溫柔療癒"
+    },
+    "poetic": {
+      prefix: "詩人",
+      suffix: "，如詩如畫般綻放生命之美。",
+      style: "詩意美學"
+    },
+    "mythic": {
+      prefix: "神話使者",
+      suffix: "，承載著古老的神秘力量。",
+      style: "神話傳說"
+    },
+    "default": {
+      prefix: "守護者",
+      suffix: "，在人生道路上勇敢前行。",
+      style: "平衡"
+    }
+  };
+
+  const currentTone = toneStyles[tone] || toneStyles.default;
+  
+  return {
+    chart: {
+      pillars: {
+        年: { pillar: "庚午", gan: "庚", zhi: "午" },
+        月: { pillar: "辛巳", gan: "辛", zhi: "巳" },
+        日: { pillar: "甲子", gan: "甲", zhi: "子" },
+        時: { pillar: "丙午", gan: "丙", zhi: "午" }
+      },
+      fiveElements: { 金: 2, 木: 1, 水: 1, 火: 3, 土: 1 },
+      yinYang: { 陰: 3, 陽: 5 }
+    },
+    narrative: {
+      年: {
+        commander: `金馬${currentTone.prefix}`,
+        strategist: "堅韌軍師",
+        naYin: "路旁土",
+        story: `出生於${birthData.year}年的你，如金馬奔騰般充滿勇氣與決心。年柱金馬${currentTone.prefix}代表你的根基扎實穩固，無論面對什麼人生挑戰都能勇敢前行。你的性格中蘊含著金屬般的堅韌不拔，如同戰馬般勇往直前，永不退縮。這份天生的領導氣質將伴隨你一生，成為你最珍貴的財富${currentTone.suffix}`
+      },
+      月: {
+        commander: `金蛇${currentTone.prefix}`,
+        strategist: "智慧導師",
+        naYin: "白鑞金",
+        story: `青春時期的金蛇${currentTone.prefix}賦予你敏銳的洞察力和超凡的智慧。你善於在複雜的情況中找到最佳的解決方案，智慧如蛇般靈活多變。這個階段的你學會了如何在人際關係中游刃有餘，既能保持自己的原則，又能適應環境的變化。你的思維敏捷，總能在關鍵時刻做出正確的判斷${currentTone.suffix}`
+      },
+      日: {
+        commander: `木鼠${currentTone.prefix}`,
+        strategist: "機智先鋒",
+        naYin: "海中金",
+        story: `你的核心本質如機智的木鼠，外表溫和謙遜但內心充滿無限活力。日柱木鼠${currentTone.prefix}象徵你的適應能力極強，能在任何環境中茁壯成長。你擁有敏銳的商業嗅覺和創新思維，總能發現別人忽略的機會。這份天賦讓你在人生的各個階段都能找到屬於自己的道路，創造出獨特的價值${currentTone.suffix}`
+      },
+      時: {
+        commander: `火馬${currentTone.prefix}`,
+        strategist: "熱情戰士",
+        naYin: "天河水",
+        story: `晚年的火馬${currentTone.prefix}讓你永遠保持青春的熱情和活力，對生活充滿好奇心和冒險精神。你是天生的領導者，能夠激勵身邊的人追求更高的目標。即使歲月流逝，你的內心依然燃燒著不滅的火焰，這份熱情將成為你人生最後階段的最大財富。你的智慧和經驗將如天河之水般源源不絕，滋養著後代${currentTone.suffix}`
+      }
+    }
+  };
+}
 
 // 生成新的八字數據
 async function generateFreshData() {

@@ -48,14 +48,27 @@
   opacity: 1;
 }
 
-/* 修正select選項顏色 */
+/* 修正select選項顏色 - 加強對比度 */
 .form-section select option {
-  background: #1a1a2e;
-  color: white;
+  background: #1a1a2e !important;
+  color: #ffffff !important;
+  font-weight: 500;
 }
 
 .form-section select {
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+/* 針對不同瀏覽器的選單樣式 */
+.form-section select option:checked {
+  background: #7873f5 !important;
+  color: #ffffff !important;
+}
+
+.form-section select option:hover {
+  background: #ff6ec4 !important;
+  color: #ffffff !important;
 }
 
 .form-section input:focus,

@@ -28,6 +28,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function enterSite() {
   const tone = document.getElementById("tone").value
+  const year = document.getElementById("birth-year").value
+  const month = document.getElementById("birth-month").value
+  const day = document.getElementById("birth-day").value
+  const hour = document.getElementById("birth-hour").value
+  
+  // 檢查是否所有資料都已填寫
+  if (!year || !month || !day || !hour) {
+    alert("請完整填寫出生資料")
+    return
+  }
+  
+  // 保存所有資料到 localStorage
   localStorage.setItem("tone", tone)
+  localStorage.setItem("birthData", JSON.stringify({
+    year: parseInt(year),
+    month: parseInt(month),
+    day: parseInt(day),
+    hour: parseInt(hour)
+  }))
+  
   window.location.href = "bazi.html"
 }
