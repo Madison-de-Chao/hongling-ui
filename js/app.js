@@ -1,28 +1,48 @@
+// 頁面載入時從 localStorage 讀取數據並渲染
+document.addEventListener("DOMContentLoaded", () => {
+  const baziAnalysis = localStorage.getItem("baziAnalysis");
+  if (baziAnalysis) {
+    const data = JSON.parse(baziAnalysis);
+    if (data.chart && data.narrative) {
+      renderChart(data.chart);
+      renderNarrative(data.narrative);
+    }
+  }
+});
+
+// 原有的表單提交處理保留作為備用
 document.getElementById("bazi-form").addEventListener("submit", async (e) => {
   e.preventDefault()
   const form = new FormData(e.target)
   const input = {
-    yyyy: form.get("yyyy"),
-    mm: form.get("mm"),
-    dd: form.get("dd"),
-    hh: form.get("hh"),
+    year: parseInt(form.get("yyyy")),
+    month: parseInt(form.get("mm")),
+    day: parseInt(form.get("dd")),
+    hour: parseInt(form.get("hh")),
     minute: 0,
     zMode: form.get("zMode")
   }
   const tone = localStorage.getItem("tone") || "default"
 
-  const res = await fetch("/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input, tone })
-  })
-  const { chart, narrative } = await res.json()
+  try {
+    // 使用新的資料庫API
+    const analysisData = await getFullBaziAnalysis({
+      year: input.year,
+      month: input.month,
+      day: input.day,
+      hour: input.hour
+    }, tone);
 
-  localStorage.setItem("chart", JSON.stringify(chart))
-  localStorage.setItem("narrative", JSON.stringify(narrative))
-
-  renderChart(chart)
-  renderNarrative(narrative)
+    localStorage.setItem("baziAnalysis", JSON.stringify(analysisData));
+    
+    if (analysisData.chart && analysisData.narrative) {
+      renderChart(analysisData.chart);
+      renderNarrative(analysisData.narrative);
+    }
+  } catch (error) {
+    console.error("計算失敗：", error);
+    alert("計算失敗：" + error.message);
+  }
 })
 
 function renderChart(chart) {

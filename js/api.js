@@ -1,4 +1,4 @@
-const API_BASE = "https://web-production-a01dc.up.railway.app";
+const API_BASE = "https://rainbow-sanctuary-bazu-production.up.railway.app";
 
 // 呼叫後端 API，取得敘事報告
 async function fetchReport(pillars, tone = "default") {
@@ -12,8 +12,32 @@ async function fetchReport(pillars, tone = "default") {
   return await res.json();
 }
 
-// 點擊「開始召喚你的軍團」時執行
-function enterSite() {
+// 新增：從資料庫計算八字
+async function calculateBaziFromDatabase(birthData) {
+  const res = await fetch(`${API_BASE}/bazi/calculate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(birthData)
+  });
+
+  if (!res.ok) throw new Error("八字計算失敗");
+  return await res.json();
+}
+
+// 新增：從資料庫獲取完整八字分析
+async function getFullBaziAnalysis(birthData, tone = "default") {
+  const res = await fetch(`${API_BASE}/bazi/analysis`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...birthData, tone })
+  });
+
+  if (!res.ok) throw new Error("八字分析失敗");
+  return await res.json();
+}
+
+// 點擊「開始召喚你的軍團」時執行 - 保留作為備用方法
+function enterSiteOld() {
   const tone = document.getElementById("tone").value;
 
   // 暫時使用固定四柱資料（你之後可以改成使用者輸入）
@@ -68,8 +92,8 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// 主召喚函式
-function enterSite() {
+// 主召喚函式 - 使用資料庫計算
+async function enterSite() {
   const tone = document.getElementById("tone").value;
   const y = parseInt(document.getElementById("birth-year").value);
   const m = parseInt(document.getElementById("birth-month").value);
@@ -81,30 +105,35 @@ function enterSite() {
     return;
   }
 
-  // 使用 utils.ts 的四柱推演邏輯（你已經有）
-  const yearPillar = calculateYearPillar(y, m, d);
-  const monthPillar = calculateMonthPillar(yearPillar.gan, y, m, d);
-  const dayPillar = calculateDayPillar(y, m, d);
-  const hourPillar = calculateHourPillar(h, dayPillar.gan);
-
-  const pillars = {
-    year: yearPillar,
-    month: monthPillar,
-    day: dayPillar,
-    hour: hourPillar
+  // 準備出生資料
+  const birthData = {
+    year: y,
+    month: m,
+    day: d,
+    hour: h,
+    tone: tone
   };
 
   document.querySelector(".enter-btn").innerText = "召喚中...";
+  document.querySelector(".enter-btn").disabled = true;
 
-  fetchReport(pillars, tone)
-    .then(data => {
-      console.log("敘事結果：", data);
-      alert("召喚成功！請查看控制台結果");
-      document.querySelector(".enter-btn").innerText = "開始召喚你的軍團";
-    })
-    .catch(err => {
-      console.error("API 錯誤", err);
-      alert("召喚失敗，請稍後再試");
-      document.querySelector(".enter-btn").innerText = "開始召喚你的軍團";
-    });
+  try {
+    // 從資料庫獲取完整八字分析
+    const analysisData = await getFullBaziAnalysis(birthData, tone);
+    
+    console.log("八字分析結果：", analysisData);
+    
+    // 保存數據到 localStorage 以便其他頁面使用
+    localStorage.setItem("baziAnalysis", JSON.stringify(analysisData));
+    localStorage.setItem("tone", tone);
+    
+    // 跳轉到結果頁面
+    window.location.href = "bazi.html";
+    
+  } catch (err) {
+    console.error("API 錯誤", err);
+    alert("召喚失敗，請稍後再試: " + err.message);
+    document.querySelector(".enter-btn").innerText = "開始召喚你的軍團";
+    document.querySelector(".enter-btn").disabled = false;
+  }
 }

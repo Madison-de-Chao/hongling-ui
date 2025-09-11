@@ -14,6 +14,7 @@ canvas#particles-bg {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
 }
 
 .logo-section {
@@ -37,6 +38,7 @@ canvas#particles-bg {
 .text-section {
   text-align: center;
   max-width: 600px;
+  margin-bottom: 2rem;
 }
 
 .brand-title {
@@ -44,6 +46,7 @@ canvas#particles-bg {
   background: linear-gradient(to right, #ff6ec4, #7873f5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
 }
 
 .brand-slogan {
@@ -59,15 +62,137 @@ canvas#particles-bg {
 }
 
 .tone-selector {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  color: #ddd;
+  text-align: center;
+}
+
+.tone-selector label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
   color: #ddd;
 }
 
+.tone-selector select {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.tone-selector select:hover {
+  border-color: #ff6ec4;
+  box-shadow: 0 0 10px rgba(255, 110, 196, 0.3);
+}
+
+.birth-form {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.birth-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+.birth-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.birth-fields select {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.birth-fields select:hover {
+  border-color: #7873f5;
+  box-shadow: 0 0 10px rgba(120, 115, 245, 0.3);
+}
+
+.birth-fields select:focus {
+  outline: none;
+  border-color: #ff6ec4;
+  box-shadow: 0 0 15px rgba(255, 110, 196, 0.4);
+}
+
 .enter-btn {
-  background: linear-gradient(to right, #ff6ec4, #7873f5);
-  padding: 1em 2em;
+  background: linear-gradient(135deg, #ff6ec4, #7873f5);
+  padding: 1.2rem 2.5rem;
   font-size: 1.2rem;
   color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(255, 110, 196, 0.4);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.enter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(255, 110, 196, 0.6);
+}
+
+.enter-btn:active {
+  transform: translateY(0);
+}
+
+.enter-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@keyframes logoFade {
+  to { opacity: 1; }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .logo-section {
+    gap: 1rem;
+  }
+  
+  .logo {
+    width: 100px;
+  }
+  
+  .brand-title {
+    font-size: 1.8rem;
+  }
+  
+  .birth-form {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  .birth-fields {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
 }
