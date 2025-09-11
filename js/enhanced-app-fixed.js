@@ -282,13 +282,13 @@ async function renderAnimatedNarrative(narrative) {
   
   for (let i = 0; i < pillarNames.length; i++) {
     const pillarName = pillarNames[i];
-    const data = narrative[pillarName];
-    if (!data) continue;
+    const pillarNarrative = narrative[pillarName];
+    if (!pillarNarrative) continue;
     
     const card = document.createElement("div");
     card.className = "narrative-card";
     card.style.cssText = `
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
       border: 1px solid ${colors[i]}40;
       border-radius: 16px;
       padding: 2rem;
@@ -302,14 +302,14 @@ async function renderAnimatedNarrative(narrative) {
     
     card.innerHTML = `
       <h3 style="color: ${colors[i]}; margin-bottom: 1rem; font-size: 1.5rem;">
-        ${pillarName}柱 · ${data.commander || data.title || '守護者'}
+        ${pillarName}柱 · ${pillarNarrative.title}
       </h3>
       <div style="display: flex; gap: 2rem; margin-bottom: 1rem;">
-        <div style="color: ${colors[i]}; font-weight: bold;">軍師：${data.strategist || data.relation || '未知'}</div>
-        <div style="color: ${colors[i]}; font-weight: bold;">納音：${data.naYin || data.nayin || '未知'}</div>
+        <div style="color: ${colors[i]}; font-weight: bold;">軍師：${pillarNarrative.relation}</div>
+        <div style="color: ${colors[i]}; font-weight: bold;">納音：${pillarNarrative.nayin}</div>
       </div>
       <p style="color: #ccc; line-height: 1.6; font-size: 1rem;">
-        ${data.story || data.description || '暫無描述'}
+        ${pillarNarrative.description}
       </p>
     `;
     
@@ -329,29 +329,15 @@ async function renderAnimatedNarrative(narrative) {
 function renderYinYang(yinYang) {
   const yinYangElement = ensureElement("#yinyang", "yinyang");
   
-  // 處理不同的數據結構
-  let yinCount = 0, yangCount = 0;
-  
-  if (yinYang && typeof yinYang === 'object') {
-    yinCount = yinYang.yin || yinYang.陰 || 0;
-    yangCount = yinYang.yang || yinYang.陽 || 0;
-  }
-  
-  // 如果沒有數據，使用默認值
-  if (yinCount === 0 && yangCount === 0) {
-    yinCount = 3;
-    yangCount = 4;
-  }
-  
   yinYangElement.innerHTML = `
     <div style="display: flex; justify-content: center; gap: 2rem; align-items: center;">
       <div style="text-align: center;">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;">☯</div>
-        <div style="color: #ff6ec4; font-size: 1.2rem; font-weight: bold;">陰：${yinCount}</div>
+        <div style="color: #ff6ec4; font-size: 1.2rem; font-weight: bold;">陰：${yinYang.yin}</div>
       </div>
       <div style="text-align: center;">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;">☯</div>
-        <div style="color: #7873f5; font-size: 1.2rem; font-weight: bold;">陽：${yangCount}</div>
+        <div style="color: #7873f5; font-size: 1.2rem; font-weight: bold;">陽：${yinYang.yang}</div>
       </div>
     </div>
   `;
