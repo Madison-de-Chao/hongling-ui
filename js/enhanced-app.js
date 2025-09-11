@@ -240,6 +240,20 @@ async function renderEnhancedResultsOnce(data) {
     // 渲染陰陽統計
     renderYinYang(data.chart.yinYang);
     
+    // 計算並顯示神煞信息
+    if (window.calculateAllShensha && data.chart && data.chart.pillars) {
+      const pillars = {
+        年: { gan: data.chart.pillars.年.gan, zhi: data.chart.pillars.年.zhi },
+        月: { gan: data.chart.pillars.月.gan, zhi: data.chart.pillars.月.zhi },
+        日: { gan: data.chart.pillars.日.gan, zhi: data.chart.pillars.日.zhi },
+        時: { gan: data.chart.pillars.時.gan, zhi: data.chart.pillars.時.zhi }
+      };
+      
+      const shenshaList = window.calculateAllShensha(pillars);
+      const formattedShensha = window.formatShenshaForDisplay(shenshaList);
+      renderShenshaInfo(formattedShensha);
+    }
+    
     // 添加神煞信息（如果有）
     if (data.spirits && data.spirits.length > 0) {
       renderSpirits(data.spirits);
@@ -575,5 +589,70 @@ document.getElementById("bazi-form")?.addEventListener("submit", async (e) => {
 
 function exportReport() {
   window.location.href = "report.html";
+}
+
+
+
+// 渲染神煞信息
+function renderShenshaInfo(shenshaList) {
+  const narrativeElement = ensureElement("#narrative", "narrative");
+  
+  const shenshaCard = document.createElement("div");
+  shenshaCard.className = "shensha-card";
+  shenshaCard.style.cssText = `
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.05));
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(10px);
+    transform: translateY(30px);
+    opacity: 0;
+    transition: all 0.6s ease;
+  `;
+  
+  const shenshaContent = shenshaList.map(shensha => {
+    const categoryColor = {
+      '吉神': '#4ade80',
+      '桃花': '#f472b6', 
+      '動星': '#60a5fa',
+      '凶煞': '#f87171',
+      '中性': '#a3a3a3'
+    }[shensha.category] || '#ffd700';
+    
+    const pillarText = shensha.pillars.length > 0 ? 
+      ` <span style="color: ${categoryColor}; font-size: 0.9rem;">(${shensha.pillars.join('、')}柱)</span>` : '';
+    
+    return `
+      <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px; border-left: 4px solid ${categoryColor};">
+        <div style="color: ${categoryColor}; font-weight: bold; margin-bottom: 0.5rem;">
+          ${shensha.name}${pillarText}
+        </div>
+        <div style="color: #fff; font-size: 0.95rem; margin-bottom: 0.3rem;">
+          ${shensha.effect}
+        </div>
+        <div style="color: #ccc; font-size: 0.85rem; line-height: 1.4;">
+          ${shensha.description}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  shenshaCard.innerHTML = `
+    <h3 style="color: #ffd700; margin-bottom: 1.5rem; font-size: 1.5rem; text-align: center;">
+      🔮 神煞信息
+    </h3>
+    <div style="line-height: 1.6;">
+      ${shenshaContent}
+    </div>
+  `;
+  
+  narrativeElement.appendChild(shenshaCard);
+  
+  // 延遲動畫
+  setTimeout(() => {
+    shenshaCard.style.transform = "translateY(0)";
+    shenshaCard.style.opacity = "1";
+  }, 100);
 }
 
