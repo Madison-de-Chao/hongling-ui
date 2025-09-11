@@ -64,12 +64,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("從首頁載入出生資料:", birthData);
       console.log("用戶姓名:", userName);
       
-      // 自動填入表單
+      // 自動填入表單（包含姓名和性別）
+      const userNameInput = document.querySelector('input[name="user-name"]');
+      const genderSelect = document.querySelector('select[name="gender"]');
       const yearInput = document.querySelector('input[name="yyyy"]') || document.querySelector('input[placeholder="西元年"]');
       const monthInput = document.querySelector('input[name="mm"]') || document.querySelector('input[placeholder="月"]');
       const dayInput = document.querySelector('input[name="dd"]') || document.querySelector('input[placeholder="日"]');
       const hourInput = document.querySelector('input[name="hh"]') || document.querySelector('input[placeholder="時（0–23）"]');
       
+      if (userNameInput && birthData.userName) userNameInput.value = birthData.userName;
+      if (genderSelect && birthData.gender) genderSelect.value = birthData.gender;
       if (yearInput) yearInput.value = birthData.year;
       if (monthInput) monthInput.value = birthData.month;
       if (dayInput) dayInput.value = birthData.day;

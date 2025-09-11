@@ -112,10 +112,13 @@ canvas#particles-bg {
 
 .name-field {
   margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.8rem;
 }
 
-.name-field input {
-  width: 100%;
+.name-field input,
+.name-field select {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -131,15 +134,22 @@ canvas#particles-bg {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.name-field input:hover {
+.name-field input:hover,
+.name-field select:hover {
   border-color: #ff6ec4;
   box-shadow: 0 0 10px rgba(255, 110, 196, 0.3);
 }
 
-.name-field input:focus {
+.name-field input:focus,
+.name-field select:focus {
   outline: none;
   border-color: #ff6ec4;
   box-shadow: 0 0 15px rgba(255, 110, 196, 0.4);
+}
+
+.name-field select option {
+  background: #1a1a2e;
+  color: white;
 }
 
 .birth-fields {

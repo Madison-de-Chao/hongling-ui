@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function enterSite() {
   const tone = document.getElementById("tone").value
   const userName = document.getElementById("user-name").value
+  const gender = document.getElementById("gender").value
   const year = document.getElementById("birth-year").value
   const month = document.getElementById("birth-month").value
   const day = document.getElementById("birth-day").value
@@ -44,6 +45,8 @@ function enterSite() {
   localStorage.setItem("tone", tone)
   localStorage.setItem("userName", userName || "")
   localStorage.setItem("birthData", JSON.stringify({
+    userName: userName || "",
+    gender: gender || "",
     year: parseInt(year),
     month: parseInt(month),
     day: parseInt(day),

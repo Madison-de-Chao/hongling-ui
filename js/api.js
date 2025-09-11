@@ -200,25 +200,25 @@ function getDemoAnalysis(birthData, tone = "default") {
         commander: `金馬${currentTone.prefix}`,
         strategist: "堅韌軍師",
         naYin: "路旁土",
-        story: `出生於${birthData.year}年的你，如金馬奔騰，充滿勇氣與決心。年柱金馬${currentTone.prefix}代表你的根基扎實，無論面對什麼挑戰都能勇敢前行${currentTone.suffix}`
+        story: `出生於${birthData.year}年的你，如金馬奔騰，充滿勇氣與決心。年柱金馬${currentTone.prefix}代表你的根基扎實，無論面對什麼挑戰都能勇敢前行。你的性格中蘊含著堅韌不拔的精神，就像路旁土一般默默承載著一切，為他人提供穩固的支撐。在人生的道路上，你總是能夠以最踏實的方式前進，不急不躁，但每一步都走得堅定有力。你的存在就像大地一般可靠，讓身邊的人感到安心和溫暖${currentTone.suffix}`
       },
       月: {
         commander: `金蛇${currentTone.prefix}`,
         strategist: "智慧導師", 
         naYin: "白鑞金",
-        story: `青春時期的金蛇${currentTone.prefix}賦予你敏銳的洞察力，你善於在複雜的情況中找到最佳的解決方案，智慧如蛇般靈活${currentTone.suffix}`
+        story: `青春時期的金蛇${currentTone.prefix}賦予你敏銳的洞察力，你善於在複雜的情況中找到最佳的解決方案，智慧如蛇般靈活。你的思維敏捷，總能在關鍵時刻做出正確的判斷，就像白鑞金一般純淨而珍貴。在人際關係中，你展現出卓越的溝通能力，能夠理解他人的內心世界，並給予最適當的建議。你的智慧不僅體現在學識上，更在於對人性的深刻理解，這讓你成為朋友們信賴的智慧導師${currentTone.suffix}`
       },
       日: {
         commander: `木鼠${currentTone.prefix}`,
         strategist: "機智先鋒",
         naYin: "海中金", 
-        story: `你的核心本質如機智的木鼠，外表溫和但內心充滿活力。日柱木鼠${currentTone.prefix}象徵你的適應能力極強，能在任何環境中茁壯成長${currentTone.suffix}`
+        story: `你的核心本質如機智的木鼠，外表溫和但內心充滿活力。日柱木鼠${currentTone.prefix}象徵你的適應能力極強，能在任何環境中茁壯成長。你擁有敏銳的直覺和靈活的思維，總能在變化中找到機會，就像海中金一般在深邃的海洋中閃閃發光。你的人格魅力在於那種不張揚但深具內涵的特質，你不需要大聲宣告自己的存在，卻能在關鍵時刻展現出驚人的能力。你是天生的問題解決者，總能以創新的方式化解困難${currentTone.suffix}`
       },
       時: {
         commander: `火馬${currentTone.prefix}`,
         strategist: "熱情戰士",
         naYin: "天河水",
-        story: `晚年的火馬${currentTone.prefix}讓你保持青春的熱情，永遠對生活充滿好奇心和冒險精神，是天生的領導者${currentTone.suffix}`
+        story: `晚年的火馬${currentTone.prefix}讓你保持青春的熱情，永遠對生活充滿好奇心和冒險精神，是天生的領導者。你的熱情如火焰般燃燒，照亮身邊每一個人的心靈，就像天河水一般源源不絕地滋養著周圍的生命。即使歲月流逝，你依然保持著年輕的心態，對未來充滿憧憬和期待。你的領導風格溫暖而有力，能夠激發他人的潛能，讓團隊在你的帶領下創造出驚人的成就。你的人生哲學是永遠保持前進的動力，永不停歇地追求更高的目標${currentTone.suffix}`
       }
     }
   };

@@ -15,10 +15,20 @@
     <section class="form-section">
       <h2>輸入你的出生資料</h2>
       <form id="bazi-form">
-        <input type="number" name="yyyy" placeholder="西元年" required />
-        <input type="number" name="mm" placeholder="月" required />
-        <input type="number" name="dd" placeholder="日" required />
-        <input type="number" name="hh" placeholder="時（0–23）" required />
+        <div class="form-row">
+          <input type="text" name="user-name" placeholder="姓名或暱稱（選填）" maxlength="20" />
+          <select name="gender">
+            <option value="">性別</option>
+            <option value="male">男</option>
+            <option value="female">女</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="number" name="yyyy" placeholder="西元年" required />
+          <input type="number" name="mm" placeholder="月" required />
+          <input type="number" name="dd" placeholder="日" required />
+          <input type="number" name="hh" placeholder="時（0–23）" required />
+        </div>
         <select name="zMode">
           <option value="none">不換日</option>
           <option value="late">子時後換日</option>
