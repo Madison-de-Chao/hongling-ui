@@ -50,54 +50,82 @@ const storage = (() => {
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("Enhanced app loaded, checking localStorage...");
+  console.log("Enhanced app loaded");
   
-  const baziAnalysis = storage.getItem("baziAnalysis");
-  const tone = storage.getItem("tone") || "default";
-  const userName = storage.getItem("userName") || "";
-  
-  // 檢查是否有從首頁傳來的出生資料
-  const savedBirthData = storage.getItem("birthData");
-  if (savedBirthData) {
-    try {
-      const birthData = JSON.parse(savedBirthData);
-      console.log("從首頁載入出生資料:", birthData);
-      console.log("用戶姓名:", userName);
+  // 綁定表單提交事件
+  const form = document.getElementById('bazi-form');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      console.log('Form submitted');
       
-      // 自動填入表單（包含姓名和性別）
-      const userNameInput = document.querySelector('input[name="user-name"]');
-      const genderSelect = document.querySelector('select[name="gender"]');
-      const yearInput = document.querySelector('input[name="yyyy"]') || document.querySelector('input[placeholder="西元年"]');
-      const monthInput = document.querySelector('input[name="mm"]') || document.querySelector('input[placeholder="月"]');
-      const dayInput = document.querySelector('input[name="dd"]') || document.querySelector('input[placeholder="日"]');
-      const hourInput = document.querySelector('input[name="hh"]') || document.querySelector('input[placeholder="時（0–23）"]');
+      // 收集表單數據
+      const formData = new FormData(form);
+      const data = {
+        userName: formData.get('user-name') || '',
+        gender: formData.get('gender') || '',
+        year: parseInt(formData.get('yyyy')),
+        month: parseInt(formData.get('mm')),
+        day: parseInt(formData.get('dd')),
+        hour: parseInt(formData.get('hh')),
+        zMode: formData.get('zMode') || 'none'
+      };
       
-      if (userNameInput && birthData.userName) userNameInput.value = birthData.userName;
-      if (genderSelect && birthData.gender) genderSelect.value = birthData.gender;
-      if (yearInput) yearInput.value = birthData.year;
-      if (monthInput) monthInput.value = birthData.month;
-      if (dayInput) dayInput.value = birthData.day;
-      if (hourInput) hourInput.value = birthData.hour;
+      console.log('Form data:', data);
       
-      // 如果沒有保存的分析結果，自動計算
-      if (!baziAnalysis) {
-        console.log("自動計算八字...");
-        showLoadingAnimation();
+      // 顯示載入動畫
+      showLoadingAnimation();
+      
+      try {
+        // 調用後端API
+        const result = await getFullBaziAnalysis(data);
+        console.log('API result:', result);
         
-        try {
-          const analysisData = await getFullBaziAnalysis(birthData, tone);
-          storage.setItem("baziAnalysis", JSON.stringify(analysisData));
-          await renderEnhancedResultsOnce(analysisData);
-        } catch (error) {
-          console.error("自動計算失敗，使用演示數據:", error);
-          const demoData = getRichDemoAnalysis(birthData, tone);
-          await renderEnhancedResultsOnce(demoData);
+        // 顯示結果區域
+        const resultSection = document.getElementById('result');
+        if (resultSection) {
+          resultSection.style.display = 'block';
         }
         
-        hideLoadingAnimation();
-        return;
+        // 渲染結果
+        await renderEnhancedResultsOnce(result);
+        
+        // 保存數據
+        storage.setItem('baziAnalysis', JSON.stringify(result));
+        storage.setItem('birthData', JSON.stringify(data));
+        
+      } catch (error) {
+        console.error('Error:', error);
+        alert('計算失敗，請稍後再試');
       }
+      
+      hideLoadingAnimation();
+    });
+  }
+  
+  // 載入保存的數據到表單
+  const savedData = storage.getItem('birthData');
+  if (savedData) {
+    try {
+      const data = JSON.parse(savedData);
+      const userNameInput = document.querySelector('input[name="user-name"]');
+      const genderSelect = document.querySelector('select[name="gender"]');
+      const yearInput = document.querySelector('input[name="yyyy"]');
+      const monthInput = document.querySelector('input[name="mm"]');
+      const dayInput = document.querySelector('input[name="dd"]');
+      const hourInput = document.querySelector('input[name="hh"]');
+      
+      if (userNameInput && data.userName) userNameInput.value = data.userName;
+      if (genderSelect && data.gender) genderSelect.value = data.gender;
+      if (yearInput && data.year) yearInput.value = data.year;
+      if (monthInput && data.month) monthInput.value = data.month;
+      if (dayInput && data.day) dayInput.value = data.day;
+      if (hourInput && data.hour) hourInput.value = data.hour;
     } catch (error) {
+      console.error('Error loading saved data:', error);
+    }
+  }
+});
       console.error("解析出生資料失敗:", error);
     }
   }
@@ -472,7 +500,12 @@ function renderYinYang(yinYang) {
 
 // 安全的神煞信息渲染
 function renderSpirits(spirits) {
-  const narrativeElement = ensureElement("#narrative", "narrative");
+  const shenshaElement = ensureElement("#shensha-info", "shensha-info");
+  
+  if (!spirits || spirits.length === 0) {
+    shenshaElement.innerHTML = '<div style="color: #888;">暫無神煞信息</div>';
+    return;
+  }
   
   const spiritsCard = document.createElement("div");
   spiritsCard.className = "spirits-card";
@@ -485,14 +518,31 @@ function renderSpirits(spirits) {
     backdrop-filter: blur(10px);
   `;
   
+  // 處理神煞數據，確保正確顯示
+  let spiritsContent = '';
+  if (Array.isArray(spirits)) {
+    spiritsContent = spirits.map(spirit => {
+      if (typeof spirit === 'string') {
+        return `<div style="margin-bottom: 0.5rem;">• ${spirit}</div>`;
+      } else if (spirit && spirit.name) {
+        return `<div style="margin-bottom: 0.5rem;">• ${spirit.name}${spirit.description ? ': ' + spirit.description : ''}</div>`;
+      } else {
+        return `<div style="margin-bottom: 0.5rem;">• ${JSON.stringify(spirit)}</div>`;
+      }
+    }).join('');
+  } else {
+    spiritsContent = `<div style="margin-bottom: 0.5rem;">• ${spirits}</div>`;
+  }
+  
   spiritsCard.innerHTML = `
     <h3 style="color: #ffd700; margin-bottom: 1rem; font-size: 1.5rem;">神煞信息</h3>
     <div style="color: #ccc; line-height: 1.6;">
-      ${spirits.map(spirit => `<div style="margin-bottom: 0.5rem;">• ${spirit}</div>`).join('')}
+      ${spiritsContent}
     </div>
   `;
   
-  narrativeElement.appendChild(spiritsCard);
+  shenshaElement.innerHTML = '';
+  shenshaElement.appendChild(spiritsCard);
 }
 
 // 載入動畫函數
