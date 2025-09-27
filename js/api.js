@@ -364,7 +364,7 @@ async function enterSite() {
     localStorage.setItem("tone", tone);
     
     // 跳轉到結果頁面
-    window.location.href = "bazi.html";
+    window.location.href = "report.html";
     
   } catch (err) {
     console.error("API 錯誤", err);
