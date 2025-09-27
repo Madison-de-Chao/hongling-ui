@@ -53,5 +53,5 @@ function enterSite() {
     hour: parseInt(hour)
   }))
   
-  window.location.href = "bazi.html"
+  window.location.href = "report.html"
 }
